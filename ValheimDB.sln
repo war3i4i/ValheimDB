@@ -1,6 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValheimDB", "ValheimDB\ValheimDB.csproj", "{12CC091F-CA96-479B-9217-A7A9E54C4375}"
+	ProjectSection(ProjectDependencies) = postProject
+		{002354F1-4300-4C58-8D1C-4155A8AE92B7} = {002354F1-4300-4C58-8D1C-4155A8AE92B7}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YamlAliasCreator", "YamlAliasCreator\YamlAliasCreator.csproj", "{002354F1-4300-4C58-8D1C-4155A8AE92B7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +17,9 @@ Global
 		{12CC091F-CA96-479B-9217-A7A9E54C4375}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12CC091F-CA96-479B-9217-A7A9E54C4375}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12CC091F-CA96-479B-9217-A7A9E54C4375}.Release|Any CPU.Build.0 = Release|Any CPU
+		{002354F1-4300-4C58-8D1C-4155A8AE92B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{002354F1-4300-4C58-8D1C-4155A8AE92B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{002354F1-4300-4C58-8D1C-4155A8AE92B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{002354F1-4300-4C58-8D1C-4155A8AE92B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

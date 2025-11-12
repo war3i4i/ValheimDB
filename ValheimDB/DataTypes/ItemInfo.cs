@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using YamlDotNet.Serialization;
+using static ValheimDB.Utils;
 
 namespace ValheimDB.DataTypes;
 
@@ -44,16 +45,16 @@ public class ItemInfoWrapper
         [YamlIgnore] public bool _hasRecipe = true;
         [YamlIgnore] public bool _hasCraftingStation = true;
 
-        public string Name;
-        public string Description;
-        public string CraftingStation;
-        public int? Weight;
-        public int? MaxDurability;
-        public int? RepairStationLevel;
-        public List<string> Craft;
-        public ItemDamage? Damage;
-        public ItemDamage? DamagePerLevel;
-        public string CloneSource;
+        [DbAlias("m_name")] public string Name;
+        [DbAlias("m_description")] public string Description;
+        [DbAlias("m_craftingStation", "craftingStation")] public string CraftingStation;
+        [DbAlias("m_weight")] public int? Weight;
+        [DbAlias("m_maxDurability")] public int? MaxDurability;
+        [DbAlias("minStationLevel")] public int? RepairStationLevel;
+        [DbAlias("Build", "reqs")] public List<string> Craft;
+        [DbAlias("Damages")] public ItemDamage? Damage;
+        [DbAlias("Damage_Per_Level")] public ItemDamage? DamagePerLevel;
+        [DbAlias("clonePrefabName")] public string CloneSource;
 
         public void Serialize(ref ZPackage pkg)
         {

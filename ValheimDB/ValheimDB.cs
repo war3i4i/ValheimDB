@@ -21,7 +21,7 @@ namespace ValheimDB
     [BepInPlugin(GUID, Name, VERSION)]
     [BepInDependency("kg.AsyncModLoader", BepInDependency.DependencyFlags.HardDependency)]
     public class ValheimDB : BaseUnityPlugin
-    { 
+    {  
         internal const string GUID = "kg.ValheimDB";
         internal const string Name = "ValheimDB";
         internal const string VERSION = "1.0.0";
@@ -29,7 +29,7 @@ namespace ValheimDB
         public static ManualLogSource Logger = BepInEx.Logging.Logger.CreateLogSource(GUID);
         private static string ItemsDirectory;
         private static string PiecesDirectory;
-        private static string MonstersDirectory;
+        private static string MonstersDirectory;  
         public static CustomSyncedValue<Dictionary<string, ItemInfoWrapper.ItemInfo>> ItemInfos = new(configSync, "ValheimDB_ItemInfos", []);
         public static CustomSyncedValue<Dictionary<string, PieceInfoWrapper.PieceInfo>> PieceInfos = new(configSync, "ValheimDB_PieceInfos", []);
         public static CustomSyncedValue<Dictionary<string, MonsterInfoWrapper.MonsterInfo>> MonsterInfos = new(configSync, "ValheimDB_MonsterInfos", []);
@@ -38,7 +38,7 @@ namespace ValheimDB
         private IEnumerator AsyncAwake()
         { 
             this.AsyncModLoaderInit();
-            Harmony.PatchAll();
+            Harmony.PatchAll(); 
             CreateFoldersAndFsw();
             yield return ReloadConfigs(ItemsDirectory, ItemInfos);
             yield return ReloadConfigs(PiecesDirectory, PieceInfos);

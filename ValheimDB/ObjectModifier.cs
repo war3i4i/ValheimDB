@@ -104,7 +104,7 @@ public static class ObjectModifier
         Dictionary<string, ItemInfoWrapper.ItemInfo> newData = ValheimDB.ItemInfos.Value;
         List<ItemDrop> itemsOnGround = ItemDrop.s_instances;
         HashSet<string> obsoleteClonedItems = []; 
-        foreach (var item in ClonedItems.ToList())
+        foreach (KeyValuePair<string, (GameObject go, string from, ItemDrop.ItemData.SharedData sharedData)> item in ClonedItems.ToList())
         {
             if (newData.ContainsKey(item.Key) && newData[item.Key].CloneSource == item.Value.from) continue;
             obsoleteClonedItems.Add(item.Key);
@@ -176,7 +176,7 @@ public static class ObjectModifier
         Dictionary<string, MonsterInfoWrapper.MonsterInfo> data = ValheimDB.MonsterInfos.Value;
         List<Character> characters = Character.s_characters;
         List<string> obsoleteClonedMonsters = [];
-        foreach (var item in ClonedMonsters.ToList())
+        foreach (KeyValuePair<string, (GameObject go, string from)> item in ClonedMonsters.ToList())
         {
             if (data.ContainsKey(item.Key) && data[item.Key].CloneSource == item.Value.from) continue;
             obsoleteClonedMonsters.Add(item.Key);

@@ -143,9 +143,13 @@
     <Target Name="BeforeBuild">
     </Target>
     <Target Name="AfterBuild">
+    </Target> 
+    -->  
+    <Target Name="WeaveDbAliases" BeforeTargets="ILRepack" AfterTargets="Build">
+        <Exec Command="&quot;Libs/YamlAliasCreator.exe&quot; &quot;$(TargetPath)&quot;" />
     </Target>
-    -->
     <Target Name="Copy" AfterTargets="ILRepack">
+        
         <Exec Command="copy /Y &quot;$(TargetDir)$(AssemblyName).dll&quot; &quot;C:\Program Files (x86)\Steam\steamapps\common\Valheim\BepInEx\plugins\$(AssemblyName).dll&quot;" />
         <Exec Command="copy /Y &quot;$(TargetDir)$(AssemblyName).dll&quot; &quot;C:\Program Files (x86)\Steam\steamapps\common\Valheim Dedicated Server\BepInEx\plugins\$(AssemblyName).dll&quot;" />
         <Exec Command="pdb2mdb.exe &quot;$(TargetDir)$(AssemblyName).dll&quot;" />

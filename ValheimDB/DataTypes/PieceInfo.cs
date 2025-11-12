@@ -95,7 +95,7 @@ public class PieceInfoWrapper
             if (HasFlagFast(flags, PieceInfoFlags.HasHealth)) pkg.Write(Health.Value);
             if (HasFlagFast(flags, PieceInfoFlags.HasDamageModifiers))
             {
-                var dmg = DamageModifiers.Value;
+                HitData.DamageModifiers dmg = DamageModifiers.Value;
                 pkg.Write((int)dmg.m_blunt);
                 pkg.Write((int)dmg.m_slash);
                 pkg.Write((int)dmg.m_pierce);
@@ -140,7 +140,7 @@ public class PieceInfoWrapper
                     pkg.Write(Fermenter.Conversions.Count);
                     for (int i = 0; i < Fermenter.Conversions.Count; ++i)
                     {
-                        var conv = Fermenter.Conversions[i];
+                        Conversion conv = Fermenter.Conversions[i];
                         pkg.Write(conv.From);
                         pkg.Write(conv.To);
                         pkg.Write(conv.Amount);
@@ -162,7 +162,7 @@ public class PieceInfoWrapper
                     pkg.Write(Smelter.Conversions.Count);
                     for (int i = 0; i < Smelter.Conversions.Count; ++i)
                     {
-                        var conv = Smelter.Conversions[i];
+                        Conversion conv = Smelter.Conversions[i];
                         pkg.Write(conv.From);
                         pkg.Write(conv.To);
                         pkg.Write(conv.Amount);
