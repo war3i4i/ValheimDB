@@ -39,19 +39,16 @@ public class ItemInfoWrapper
         public int Poison;
         public int Spirit;
     }
-
+ 
     public class ItemInfo : ISerializableParameter 
     {
-        [YamlIgnore] public bool _hasRecipe = true;
-        [YamlIgnore] public bool _hasCraftingStation = true;
-
         [DbAlias("m_name")] public string Name;
         [DbAlias("m_description")] public string Description;
         [DbAlias("m_craftingStation", "craftingStation")] public string CraftingStation;
         [DbAlias("m_weight")] public int? Weight;
         [DbAlias("m_maxDurability")] public int? MaxDurability;
         [DbAlias("minStationLevel")] public int? RepairStationLevel;
-        [DbAlias("Build", "reqs")] public List<string> Craft;
+        [DbAlias("Build", "reqs", "m_craft")] public List<string> Craft;
         [DbAlias("Damages")] public ItemDamage? Damage;
         [DbAlias("Damage_Per_Level")] public ItemDamage? DamagePerLevel;
         [DbAlias("clonePrefabName")] public string CloneSource;
@@ -176,7 +173,7 @@ public class ItemInfoWrapper
                 MaxDurability = (int)item.m_itemData.m_shared.m_maxDurability,
             };
             Recipe r = ObjectDB.instance.GetRecipe(item.m_itemData);
-            if (r == null) newInfo._hasRecipe = false;
+            if (r == null) newInfo.Craft = ["none"];
             else
             {
                 List<string> craftList = new List<string>(r.m_resources.Length);
@@ -186,10 +183,9 @@ public class ItemInfoWrapper
                     string reqString = $"{req.m_resItem.gameObject.name}:{req.m_amount}:{req.m_recover}";
                     craftList.Add(reqString);
                 }
-                newInfo.CraftingStation = r.m_craftingStation?.name ?? null;
+                newInfo.CraftingStation = r.m_craftingStation?.name ?? "none";
                 newInfo.RepairStationLevel = r.m_minStationLevel;
                 newInfo.Craft = craftList;
-                newInfo._hasCraftingStation = r.m_craftingStation != null;
             }
 
             newInfo.Damage = new ItemDamage
@@ -250,18 +246,8 @@ public class ItemInfoWrapper
                     ObjectDB.instance.m_recipes.Add(recipe);
                 }
                 recipe.m_resources = reqs.ToArray();
-                if (_hasCraftingStation) {
-                    if (!string.IsNullOrEmpty(CraftingStation))
-                        recipe.m_craftingStation = zns.GetPrefab(CraftingStation)?.GetComponent<CraftingStation>();
-                } else recipe.m_craftingStation = null;
+                if (!string.IsNullOrEmpty(CraftingStation)) recipe.m_craftingStation = zns.GetPrefab(CraftingStation)?.GetComponent<CraftingStation>();
                 if (RepairStationLevel.HasValue) recipe.m_minStationLevel = RepairStationLevel.Value;
-            }
-            else
-            {
-                if (!_hasRecipe)
-                {
-                    if (recipe != null) ObjectDB.instance.m_recipes.Remove(recipe);
-                }
             }
         }
         

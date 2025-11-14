@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using UnityEngine;
 using YamlDotNet.Serialization;
 using static ValheimDB.Utils;
 
@@ -66,7 +67,6 @@ public class PieceInfoWrapper
 
     public class PieceInfo : ISerializableParameter
     {
-        [YamlIgnore] public bool _hasCraftingStation = true;
         public int? Health;
         [DbAlias("damageModifiers")] public HitData.DamageModifiers? DamageModifiers;
         [DbAlias("m_craft", "reqs")]public List<string> Build;
@@ -310,7 +310,7 @@ public class PieceInfoWrapper
             }
 
             if (p.m_craftingStation) newInfo.CraftingStation = p.m_craftingStation.name;
-            else newInfo._hasCraftingStation = false;
+            else newInfo.CraftingStation = "none";
             return newInfo;
         }
 
@@ -318,8 +318,7 @@ public class PieceInfoWrapper
         {
             if (!string.IsNullOrEmpty(Name)) p.m_name = Name;
             if (!string.IsNullOrEmpty(Description)) p.m_description = Description;
-            if (!_hasCraftingStation) p.m_craftingStation = null;
-            else p.m_craftingStation = string.IsNullOrWhiteSpace(CraftingStation) ? null : zns.GetPrefab(CraftingStation)?.GetComponent<CraftingStation>();
+            if (!string.IsNullOrWhiteSpace(CraftingStation)) p.m_craftingStation = zns.GetPrefab(CraftingStation)?.GetComponent<CraftingStation>();
             if (p.GetComponent<WearNTear>() is { } wnt)
             {
                 if (Health.HasValue) wnt.m_health = Health.Value;
@@ -380,21 +379,22 @@ public class PieceInfoWrapper
                             m_to = zns.GetPrefab(conv.To).GetComponent<ItemDrop>()
                         });
                     }
-
                     smelter.m_conversion = conversions.ToList();
                 }
             }
 
-            if (Build != null)
+            if (Build != null && Build.Count > 0)
             {
                 List<Piece.Requirement> requirements = [];
                 for (int i = 0; i < Build.Count; ++i)
                 {
                     string req = Build[i];
                     string[] split = req.Split(':');
+                    GameObject prefab = zns.GetPrefab(split[0]);
+                    if (!prefab) continue;
                     requirements.Add(new Piece.Requirement
                     {
-                        m_resItem = zns.GetPrefab(split[0]).GetComponent<ItemDrop>(),
+                        m_resItem = prefab.GetComponent<ItemDrop>(),
                         m_amount = int.Parse(split[1]),
                         m_recover = split.Length > 2 && bool.Parse(split[2])
                     });
