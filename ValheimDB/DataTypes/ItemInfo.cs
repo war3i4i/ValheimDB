@@ -40,7 +40,7 @@ public class ItemInfoWrapper
         public int Spirit;
     }
 
-    public class ItemInfo : ISerializableParameter
+    public class ItemInfo : ISerializableParameter 
     {
         [YamlIgnore] public bool _hasRecipe = true;
         [YamlIgnore] public bool _hasCraftingStation = true;

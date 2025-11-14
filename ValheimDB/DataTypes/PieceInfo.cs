@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using YamlDotNet.Serialization;
+using static ValheimDB.Utils;
 
 namespace ValheimDB.DataTypes;
 
@@ -41,39 +43,40 @@ public class PieceInfoWrapper
 
     public class Conversion
     {
-        public string From;
-        public string To;
+        [DbAlias("FromName")] public string From;
+        [DbAlias("ToName")] public string To;
         public int Amount;
     }
 
     public class Fermenter
     {
-        public int Duration;
-        public List<Conversion> Conversions;
+        [DbAlias("fermDuration")] public int Duration;
+        [DbAlias("fermConversion")] public List<Conversion> Conversions;
     }
 
     public class Smelter
     {
-        public string FuelItem;
-        public int MaxOre;
-        public int MaxFuel;
-        public int FuelPerProduct;
-        public int SecPerProduct;
-        public List<Conversion> Conversions;
+        [DbAlias("fuelItem")] public string FuelItem;
+        [DbAlias("maxOre")] public int MaxOre;
+        [DbAlias("maxFuel")] public int MaxFuel;
+        [DbAlias("fuelPerProduct")] public int FuelPerProduct;
+        [DbAlias("secPerProduct")] public int SecPerProduct;
+        [DbAlias("smelterConversion")] public List<Conversion> Conversions;
     }
 
     public class PieceInfo : ISerializableParameter
     {
+        [YamlIgnore] public bool _hasCraftingStation = true;
         public int? Health;
-        [CanBeNull] public HitData.DamageModifiers? DamageModifiers;
-        [CanBeNull] public List<string> Build;
-        [CanBeNull] public Container Container;
-        [CanBeNull] public Fireplace Fireplace;
-        [CanBeNull] public Fermenter Fermenter;
-        [CanBeNull] public Smelter Smelter;
-        [CanBeNull] public string Name;
-        [CanBeNull] public string Description;
-        [CanBeNull] public string CraftingStation;
+        [DbAlias("damageModifiers")] public HitData.DamageModifiers? DamageModifiers;
+        [DbAlias("m_craft", "reqs")]public List<string> Build;
+        [DbAlias("contData")] public Container Container;
+        public Fireplace Fireplace;
+        public Fermenter Fermenter;
+        [DbAlias("smelterData")] public Smelter Smelter;
+        [DbAlias("m_name")] public string Name;
+        [DbAlias("m_description")] public string Description;
+        [DbAlias("craftingStation")] public string CraftingStation;
 
         public void Serialize(ref ZPackage pkg)
         {
@@ -307,6 +310,7 @@ public class PieceInfoWrapper
             }
 
             if (p.m_craftingStation) newInfo.CraftingStation = p.m_craftingStation.name;
+            else newInfo._hasCraftingStation = false;
             return newInfo;
         }
 
@@ -314,7 +318,8 @@ public class PieceInfoWrapper
         {
             if (!string.IsNullOrEmpty(Name)) p.m_name = Name;
             if (!string.IsNullOrEmpty(Description)) p.m_description = Description;
-            if (!string.IsNullOrEmpty(CraftingStation)) p.m_craftingStation = zns.GetPrefab(CraftingStation).GetComponent<CraftingStation>();
+            if (!_hasCraftingStation) p.m_craftingStation = null;
+            else p.m_craftingStation = string.IsNullOrWhiteSpace(CraftingStation) ? null : zns.GetPrefab(CraftingStation)?.GetComponent<CraftingStation>();
             if (p.GetComponent<WearNTear>() is { } wnt)
             {
                 if (Health.HasValue) wnt.m_health = Health.Value;

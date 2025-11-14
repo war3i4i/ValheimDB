@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using static ValheimDB.Utils;
 
 namespace ValheimDB.DataTypes;
 
@@ -21,7 +22,7 @@ public class MonsterInfoWrapper
 
     public class MonsterInfo : ISerializableParameter
     {
-        public string Name;
+        [DbAlias("m_name", "mob_display_name")] public string Name;
         public int? Health;
         public float? WalkSpeed;
         public float? SwimSpeed;
@@ -69,7 +70,7 @@ public class MonsterInfoWrapper
                 Name = c.m_name,
                 Health = (int)c.m_health,
                 WalkSpeed = c.m_walkSpeed,
-                SwimSpeed = c.m_swimSpeed
+                SwimSpeed = c.m_swimSpeed,
             };
             return info;
         }
